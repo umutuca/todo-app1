@@ -30,10 +30,17 @@ function addTaskToList(task) {
     // Skapa en checkbox
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    checkbox.checked = task.completed || false;
+
+    checkbox.addEventListener("change", function() {
+
+        task.completed = checkbox.checked;
+        updateLocalStorage();
+    });
 
     // Skapa ett span-element för uppgiftens text
     const taskText = document.createElement("span");
-    taskText.textContent = task;
+    taskText.textContent = task.text || task;  // Hanterar äldre sparade tasks som enbart är text
 
     // Lägg till checkboxen och uppgiftens text till li-elementet
     li.appendChild(checkbox);
@@ -59,12 +66,12 @@ function addTask() {
         return;
     }
     // Lägg till uppgiften i arrayen
-    tasks.push(newTask);
+    tasks.push({text: newTask, completed:false});
     // Uppdatera Local Storage
     updateLocalStorage();
 
     // inbringa den nya uppgiften i listan
-    addTaskToList(newTask);
+    addTaskToList({text: newTask, completed:false});
 
     // Rensa input-fältet efter tillägg så att det är tomt
     inputTodo.value = "";
